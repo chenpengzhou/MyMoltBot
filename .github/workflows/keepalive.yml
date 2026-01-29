@@ -1,0 +1,16 @@
+name: Keep Codespace Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # 每10分钟运行一次
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake up Codespace
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" "https://${CODESPACE_NAME}-18789.github.dev/" || echo "Codespace may be stopped"
+        env:
+          CODESPACE_NAME: ${{ secrets.CODESPACE_NAME }}
